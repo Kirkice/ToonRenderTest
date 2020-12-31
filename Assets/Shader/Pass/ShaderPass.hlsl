@@ -8,7 +8,7 @@
 
 #include "./Function/ShaderUtil.hlsl"
 
-struct VertexIn_Body
+struct VertexIn_Shade
 {
 	float4 PosL                             :   POSITION;
     float3 NormalL                          :   NORMAL;
@@ -17,7 +17,7 @@ struct VertexIn_Body
     float2 texcoord0                        :   TEXCOORD0;
 };
 
-struct VertexOut_Body
+struct VertexOut_Shade
 {
 	float4 PosH                             :   SV_POSITION;
     float3 PosW                             :   TEXCOORD0;
@@ -26,17 +26,42 @@ struct VertexOut_Body
     float2 uv                               :   TEXCOORD3;
 };
 
-VertexOut VS_Body(VertexIn vin)
+//-----------------------   Body   ------------------------
+VertexOut_Shade VS_Body(VertexIn_Shade vin)
 {
-    VertexOut vout                          =   (VertexOut)0.0f;
+    VertexOut_Shade vout                    =   (VertexOut)0.0f;
     vout.PosH                               =   TransformObjectToHClip(vin.PosL.xyz);
     return vout;
 }
 
-float4 PS_Body(VertexOut pin) : SV_Target
+float4 PS_Body(VertexOut_Shade pin) : SV_Target
 {
     half4  outColor                         =   half4(1,1,1,1);
     return outColor;
 }
+//-----------------------   Hair   ------------------------
+VertexOut_Shade VS_Hair(VertexIn_Shade vin)
+{
+    VertexOut_Shade vout                    =   (VertexOut)0.0f;
+    vout.NormalW                            =   TransformObjectToWorldNormal(vin.NormalL.xyz);
+    vout.PosH                               =   TransformObjectToHClip(vin.PosL.xyz);
+    vout.PosW                               =   TransformObjectToWorld(vin.PosL);
+    vout.uv                                 =   vin.texcoord0;
+    return vout;
+}
 
+float4 PS_Hair(VertexOut_Shade pin) : SV_Target
+{
+    half4 mainColor,outColor;
+    half3 N,V,L;
+//--------------- 获取方向参数 ----------------
+    GetNormalizeDir(pin.NormalW, pin.PosW, N, L, V);
+
+//------------- 获取头发贴图参数 --------------
+    GetHairTexParames(pin.uv, outColor, mainColor);
+
+//---------------- 获取头发颜色 -----------------
+    GetHairColor(N, L, mainColor, outColor);
+    return outColor;
+}
 #endif
