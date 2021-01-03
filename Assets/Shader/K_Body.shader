@@ -2,7 +2,7 @@ Shader "K-Toon/Body"
 {
     Properties
     {
-        _MainTex        ("Main Texture",    2D)             = "white"{}
+        _MainTexture    ("Main Texture",    2D)             = "white"{}
         _OutlineWidth   ("Outline Width",   Range(0,1))     = 0.1
         _OutlineColor   ("Outline Color",   color)          = (1,1,1,1)
     }
@@ -32,8 +32,8 @@ Shader "K-Toon/Body"
             Name "Forward"
             Tags { "LightMode" = "UniversalForward"}
             HLSLPROGRAM
-            #pragma vertex VS_Body
-            #pragma fragment PS_Body
+            #pragma vertex VS_BODY
+            #pragma fragment PS_BODY
             ENDHLSL
         }
     }

@@ -1,21 +1,23 @@
 //------------- InputParames --------------
 //---------------  Kirk  ------------------
 
-/// <summary>
-/// 图片部分
-/// </summary>
-// TEXTURE2D(_OutlineZOffsetMaskTex);
+//-------------  Textures  --------------
+uniform         sampler2D   _MainTexture;
+uniform         sampler2D   _ILMTexture;
 
 CBUFFER_START(UnityPerMaterial)
-/// <summary>
-/// 描边部分
-/// </summary>
+
+//-------------  OUTLINE  --------------
     uniform     float       _OutlineWidth;
     uniform     float4      _OutlineColor;
 
-/// <summary>
-/// 图片部分
-/// </summary>
-    // uniform     float4      _OutlineZOffsetMaskTex_ST;
+//-------------  MAINTEX  --------------
+    uniform     float4      _MainTexture_ST;
+    uniform     float4      _MainColor;
 
+//-------------  ILMTEX  ---------------
+    uniform     float4      _ILMTexture_ST;
+
+//-------------  SHADOW  ---------------
+    uniform     float4      _FixShadowColor;
 CBUFFER_END

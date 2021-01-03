@@ -8,7 +8,8 @@
 
 #include "./Function/ShaderUtil.hlsl"
 
-struct VertexIn_Body
+//-------------  VERTEX_SET  --------------
+struct VertexIn_Shade
 {
 	float4 PosL                             :   POSITION;
     float3 NormalL                          :   NORMAL;
@@ -17,7 +18,7 @@ struct VertexIn_Body
     float2 texcoord0                        :   TEXCOORD0;
 };
 
-struct VertexOut_Body
+struct VertexOut_Shade
 {
 	float4 PosH                             :   SV_POSITION;
     float3 PosW                             :   TEXCOORD0;
@@ -26,17 +27,37 @@ struct VertexOut_Body
     float2 uv                               :   TEXCOORD3;
 };
 
-VertexOut VS_Body(VertexIn vin)
+//-------------  BODY  --------------
+VertexOut_Shade VS_BODY(VertexIn_Shade vin)
 {
-    VertexOut vout                          =   (VertexOut)0.0f;
+    VertexOut_Shade vout                    =   (VertexOut)0.0f;
     vout.PosH                               =   TransformObjectToHClip(vin.PosL.xyz);
+    vout.uv                                 =   vin.texcoord0;
     return vout;
 }
 
-float4 PS_Body(VertexOut pin) : SV_Target
+float4 PS_BODY(VertexOut_Shade pin) : SV_Target
 {
-    half4  outColor                         =   half4(1,1,1,1);
-    return outColor;
+    float4  outColor                        =   tex2D(_MainTexture,TRANSFORM_TEX(pin.uv,_MainTexture));
+    return  outColor;
+}
+
+//-------------  HAIR  --------------
+VertexOut_Shade VS_HAIR(VertexIn_Shade vin)
+{
+    VertexOut_Shade vout                    =   (VertexOut)0.0f;
+    vout.PosH                               =   TransformObjectToHClip(vin.PosL.xyz);
+    vout.uv                                 =   vin.texcoord0;
+    return vout;
+}
+
+float4 PS_HAIR(VertexOut_Shade pin) : SV_Target
+{
+    float4  mainColor, ilmColor, outColor;
+//-------------  设置头发颜色参数  --------------
+    GET_HAIR_COLOR(mainColor, ilmColor, pin.uv, outColor);
+    SET_HAIR_SHADOW(mainColor, ilmColor, outColor);
+    return  outColor;
 }
 
 #endif
