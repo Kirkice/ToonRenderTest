@@ -20,4 +20,7 @@ CBUFFER_START(UnityPerMaterial)
 
 //-------------  SHADOW  ---------------
     uniform     float4      _FixShadowColor;
+
+//-------------  SPEC  ---------------
+    uniform     float       _SPEC_Strength;
 CBUFFER_END

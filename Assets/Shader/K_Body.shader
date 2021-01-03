@@ -11,7 +11,6 @@ Shader "K-Toon/Body"
         Tags { "RenderType"="Opaque" "RenderPipeline"="UniversalRenderPipeline" }
 
         HLSLINCLUDE
-        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
         #include "Pass/OutLinePass.hlsl"
         #include "Pass/ShaderPass.hlsl"
         ENDHLSL

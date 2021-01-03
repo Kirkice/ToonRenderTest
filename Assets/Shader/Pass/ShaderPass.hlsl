@@ -19,7 +19,7 @@ struct VertexIn_Shade
 };
 
 struct VertexOut_Shade
-{
+{ 
 	float4 PosH                             :   SV_POSITION;
     float3 PosW                             :   TEXCOORD0;
     float3 NormalW                          :   TEXCOORD1;
@@ -47,16 +47,27 @@ VertexOut_Shade VS_HAIR(VertexIn_Shade vin)
 {
     VertexOut_Shade vout                    =   (VertexOut)0.0f;
     vout.PosH                               =   TransformObjectToHClip(vin.PosL.xyz);
+    vout.NormalW                            =   TransformObjectToWorldNormal(vin.NormalL);
+    vout.PosW                               =   mul(unity_ObjectToWorld, vin.PosL);
     vout.uv                                 =   vin.texcoord0;
     return vout;
 }
 
 float4 PS_HAIR(VertexOut_Shade pin) : SV_Target
 {
+//-------------  COLOR参数  --------------
     float4  mainColor, ilmColor, outColor;
+//-------------  DIRECTION参数  --------------
+    float3  N, L, V;
+//-------------  设置方向参数  --------------
+    GET_DIRECTION_PARAMES(pin.NormalW, pin.PosW, N, L, V);
 //-------------  设置头发颜色参数  --------------
     GET_HAIR_COLOR(mainColor, ilmColor, pin.uv, outColor);
+//-------------  设置头发阴影  --------------    
     SET_HAIR_SHADOW(mainColor, ilmColor, outColor);
+//-------------  设置头发高光  --------------  
+    SET_HAIR_HIGHLIGHT(ilmColor, N, V, L, outColor);
+    
     return  outColor;
 }
 

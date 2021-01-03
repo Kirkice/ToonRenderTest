@@ -6,6 +6,7 @@ Shader "K-Toon/Hair"
         _MainColor      ("Main Color",      Color)          = (1,1,1,1)
         _ILMTexture     ("ILM Texture",     2D)             = "white"{}
         _FixShadowColor ("FShadow Color",   Color)          = (1,1,1,1)
+        _SPEC_Strength  ("Spec Scale",      Range(0,1))     = 0.5
         _OutlineWidth   ("Outline Width",   Range(0,1))     = 0.1
         _OutlineColor   ("Outline Color",   color)          = (1,1,1,1)
     }
@@ -14,7 +15,6 @@ Shader "K-Toon/Hair"
         Tags { "RenderType"="Opaque" "RenderPipeline"="UniversalRenderPipeline" }
 
         HLSLINCLUDE
-        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
         #include "Pass/OutLinePass.hlsl"
         #include "Pass/ShaderPass.hlsl"
         ENDHLSL
