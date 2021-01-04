@@ -1,31 +1,41 @@
 //------------- InputParames --------------
 //---------------  Kirk  ------------------
 
-/// <summary>
-/// 图片部分
-/// </summary>
+//-------------  Textures  --------------
+uniform         sampler2D   _MainTexture;
+uniform         sampler2D   _ILMTexture;
+
 CBUFFER_START(UnityPerMaterial)
-/// <summary>
-/// 描边部分
-/// </summary>
+
+//-------------  OUTLINE  --------------
     uniform     float       _OutlineWidth;
     uniform     float4      _OutlineColor;
 
-/// <summary>
-/// 图片部分
-/// </summary>
-    uniform     sampler2D   _MainTex;
-    uniform     float4      _MainTex_ST;
-
-/// <summary>
-/// 颜色部分
-/// </summary>
+//-------------  MAINTEX  --------------
+    uniform     float4      _MainTexture_ST;
     uniform     float4      _MainColor;
-    uniform     float4      _F_ShadowColor;
 
-/// <summary>
-/// 阴影部分
-/// </summary>
-    uniform     float       _ShadowStep;
-    uniform     float       _ShadowFeather;
+//-------------  ILMTEX  ---------------
+    uniform     float4      _ILMTexture_ST;
+
+//-------------  SHADOW  ---------------
+    uniform     float4      _FixShadowColor;
+
+    uniform     float4      _FirstShadowColor;
+    uniform     float4      _SecondShadowColor;
+    uniform     float       _FirstStep;
+    uniform     float       _FirstFeather;
+    uniform     float       _SecondStep;
+    uniform     float       _SecondFeather;
+
+    uniform     float4      _1st_HighColor_Step;
+    uniform     float4      _2st_HighColor_Step;
+    uniform     float       _1st2nd_Light_Feather;
+    uniform     float       _1st2nd_Light_Threshold;
+
+//-------------  SPEC  ---------------
+    uniform     float       _SPEC_Strength;
+    uniform     float4      _SPEC_COLOR;
+    uniform     float       _LightWidth;
+    uniform     float       _LightLength;
 CBUFFER_END

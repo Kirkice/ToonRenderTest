@@ -8,6 +8,7 @@
 
 #include "./Function/ShaderUtil.hlsl"
 
+//-------------  VERTEX_SET  --------------
 struct VertexIn_Shade
 {
 	float4 PosL                             :   POSITION;
@@ -18,7 +19,7 @@ struct VertexIn_Shade
 };
 
 struct VertexOut_Shade
-{
+{ 
 	float4 PosH                             :   SV_POSITION;
     float3 PosW                             :   TEXCOORD0;
     float3 NormalW                          :   TEXCOORD1;
@@ -26,42 +27,54 @@ struct VertexOut_Shade
     float2 uv                               :   TEXCOORD3;
 };
 
-//-----------------------   Body   ------------------------
-VertexOut_Shade VS_Body(VertexIn_Shade vin)
+//-------------  BODY  --------------
+VertexOut_Shade VS_BODY(VertexIn_Shade vin)
 {
     VertexOut_Shade vout                    =   (VertexOut)0.0f;
     vout.PosH                               =   TransformObjectToHClip(vin.PosL.xyz);
-    return vout;
-}
-
-float4 PS_Body(VertexOut_Shade pin) : SV_Target
-{
-    half4  outColor                         =   half4(1,1,1,1);
-    return outColor;
-}
-//-----------------------   Hair   ------------------------
-VertexOut_Shade VS_Hair(VertexIn_Shade vin)
-{
-    VertexOut_Shade vout                    =   (VertexOut)0.0f;
-    vout.NormalW                            =   TransformObjectToWorldNormal(vin.NormalL.xyz);
-    vout.PosH                               =   TransformObjectToHClip(vin.PosL.xyz);
-    vout.PosW                               =   TransformObjectToWorld(vin.PosL);
     vout.uv                                 =   vin.texcoord0;
     return vout;
 }
 
-float4 PS_Hair(VertexOut_Shade pin) : SV_Target
+float4 PS_BODY(VertexOut_Shade pin) : SV_Target
 {
-    half4 mainColor,outColor;
-    half3 N,V,L;
-//--------------- 获取方向参数 ----------------
-    GetNormalizeDir(pin.NormalW, pin.PosW, N, L, V);
-
-//------------- 获取头发贴图参数 --------------
-    GetHairTexParames(pin.uv, outColor, mainColor);
-
-//---------------- 获取头发颜色 -----------------
-    GetHairColor(N, L, mainColor, outColor);
-    return outColor;
+    float4  outColor                        =   tex2D(_MainTexture,TRANSFORM_TEX(pin.uv,_MainTexture));
+    return  outColor;
 }
+
+//-------------  HAIR  --------------
+VertexOut_Shade VS_HAIR(VertexIn_Shade vin)
+{
+    VertexOut_Shade vout                    =   (VertexOut)0.0f;
+    vout.PosH                               =   TransformObjectToHClip(vin.PosL.xyz);
+    vout.NormalW                            =   TransformObjectToWorldNormal(vin.NormalL);
+    vout.PosW                               =   mul(unity_ObjectToWorld, vin.PosL);
+    vout.uv                                 =   vin.texcoord0;
+    return vout;
+}
+
+float4 PS_HAIR(VertexOut_Shade pin) : SV_Target
+{
+//-------------  COLOR参数  --------------
+    float4  mainColor, ilmColor, outColor;
+//-------------  DIRECTION参数  --------------
+    float3  N, L, V, H;
+//-------------  需要用到的参数  --------------
+    float   HNoL;
+//-------------  设置方向参数  --------------
+    GET_DIRECTION_PARAMES(pin.NormalW, pin.PosW, N, L, V);
+//-------------  设置头发颜色参数  --------------
+    GET_HAIR_COLOR(mainColor, ilmColor, pin.uv, outColor);
+//-------------  获取HNoL  --------------
+    Get_HNoL(N, L, HNoL);
+//----------------  获取H  -----------------
+    Get_H(V, L, H);
+//-------------  设置头发阴影  --------------    
+    // SET_HAIR_SHADOW(mainColor, ilmColor, outColor);
+//-------------  设置头发高光  --------------  
+    SET_HAIR_HIGHLIGHT(ilmColor, N, H, outColor);
+    
+    return  outColor;
+}
+
 #endif
