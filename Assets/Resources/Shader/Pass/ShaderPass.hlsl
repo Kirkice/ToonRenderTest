@@ -72,7 +72,7 @@ float4 PS_HAIR(VertexOut_Shade pin) : SV_Target
 //-------------  设置头发阴影  --------------    
     // SET_HAIR_SHADOW(mainColor, ilmColor, outColor);
 //-------------  设置头发高光  --------------  
-    SET_HAIR_HIGHLIGHT(ilmColor, N, H, outColor);
+    // SET_HAIR_HIGHLIGHT(ilmColor, N, H, outColor);
     
     return  outColor;
 }
