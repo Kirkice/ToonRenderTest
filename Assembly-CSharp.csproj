@@ -54,6 +54,8 @@
   <ItemGroup>
      <Compile Include="Assets\CommonSettings\TutorialInfo\Scripts\Readme.cs" />
      <Compile Include="Assets\CommonSettings\Scripts\SimpleCameraController.cs" />
+     <Compile Include="Assets\Resources\Scripts\HairLight\HairLightFirstManager.cs" />
+     <Compile Include="Assets\Resources\Scripts\HairLight\HairLightSecondManager.cs" />
      <None Include="Assets\Resources\Shader\Function\ShaderUtil.hlsl" />
      <None Include="Assets\Resources\Shader\Pass\ShaderPass.hlsl" />
      <None Include="Assets\Resources\Shader\Pass\OutLinePass.hlsl" />
