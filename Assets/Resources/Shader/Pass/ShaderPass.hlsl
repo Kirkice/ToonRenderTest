@@ -60,7 +60,7 @@ float4 PS_HAIR(VertexOut_Shade pin) : SV_Target
 //-------------  DIRECTION参数  --------------
     float3  N, L, V, H;
 //-------------  需要用到的参数  --------------
-    float   HNoL;
+    float   HNoL, Set_ShadowMask_1st;
 //-------------  设置方向参数  --------------
     GET_DIRECTION_PARAMES(pin.NormalW, pin.PosW, N, L, V);
 //-------------  设置头发颜色参数  --------------
@@ -70,7 +70,9 @@ float4 PS_HAIR(VertexOut_Shade pin) : SV_Target
 //----------------  获取H  -----------------
     Get_H(V, L, H);
 //-------------  设置头发阴影  --------------    
-    // SET_HAIR_SHADOW(mainColor, ilmColor, outColor);
+    SET_HAIR_SHADOW(N, _HairFirstLightDirection, _HairSecondLightDirection, outColor, Set_ShadowMask_1st);
+//-------------  设置头发阴影  --------------    
+    SET_HAIR_RIMLIGHT(V, N, Set_ShadowMask_1st, outColor);
 //-------------  设置头发高光  --------------  
     // SET_HAIR_HIGHLIGHT(ilmColor, N, H, outColor);
     
