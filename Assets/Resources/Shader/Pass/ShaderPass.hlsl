@@ -29,6 +29,7 @@ struct VertexIn_Shade
     float4 TangentL                         :   TANGENT;
     float4 color                            :   COLOR;
     float2 texcoord0                        :   TEXCOORD0;
+    float2 uv_Bump                          :   TEXCOORD1;
 };
 
 struct VertexOut_Shade
@@ -38,6 +39,10 @@ struct VertexOut_Shade
     float3 NormalW                          :   TEXCOORD1;
     float4 Color                            :   TEXCOORD2;
     float2 uv                               :   TEXCOORD3;
+    float2 uv_Bump                          :   TEXCOORD4;
+    float4 TW1                              :   TEXCOORD5;
+    float4 TW2                              :   TEXCOORD6;
+    float4 TW3                              :   TEXCOORD7;
 };
 
 
@@ -46,7 +51,7 @@ struct VertexOut_Shade
 //-----------------------------------------
 VertexOut_Shade VS_BODY(VertexIn_Shade vin)
 {
-    VertexOut_Shade vout                    =   (VertexOut)0.0f;
+    VertexOut_Shade                             vout;
     vout.PosH                               =   TransformObjectToHClip(vin.PosL.xyz);
     vout.uv                                 =   vin.texcoord0;
     return vout;
@@ -59,23 +64,35 @@ float4 PS_BODY(VertexOut_Shade pin) : SV_Target
 }
 
 //-----------------------------------------
-//-------------  HAIR  --------------------
+//-------------  EYE  --------------------
 //-----------------------------------------
-VertexOut_Shade VS_FACE(VertexIn_Shade vin)
+VertexOut_Shade VS_EYE(VertexIn_Shade vin)
 {
-    VertexOut_Shade vout                    =   (VertexOut)0.0f;
+    VertexOut_Shade                             vout;   
     vout.PosH                               =   TransformObjectToHClip(vin.PosL.xyz);
     vout.uv                                 =   vin.texcoord0;
     return vout;
 }
 
-float4 PS_FACE(VertexOut_Shade pin) : SV_Target
+float4 PS_EYE(VertexOut_Shade pin) : SV_Target
 {
 //-------------  XMFLOAT4 VECTOR --------------
     float4  mainColor, outColor;
 
+//-------------  XMFLOAT3 VECTOR  -------------
+    float3  N, L, V, H;
+
+//-------------  SET DIRECTION  ---------------
+    GET_DIRECTION_PARAMES(pin.NormalW, pin.PosW, N, L, V);
+
 //-------------  SET MAIN COLOR  --------------
     SET_FACE_COLOR(mainColor, outColor, pin.uv);
+
+//-------------  SET EYE HSV  --------------
+    SET_EYE_HSV(mainColor, outColor);
+
+//--------------SET EYE REFLECTION----------------
+    SET_EYE_REFLECTION(V, N, outColor);
 
     return  outColor;
 }
@@ -84,11 +101,19 @@ float4 PS_FACE(VertexOut_Shade pin) : SV_Target
 //-----------------------------------------
 VertexOut_Shade VS_HAIR(VertexIn_Shade vin)
 {
-    VertexOut_Shade vout                    =   (VertexOut)0.0f;
+    VertexOut_Shade                             vout;
     vout.PosH                               =   TransformObjectToHClip(vin.PosL.xyz);
     vout.NormalW                            =   TransformObjectToWorldNormal(vin.NormalL);
+    float3 TangentW                         =   TransformObjectToWorldDir(vin.TangentL.xyz);
+    float3 BinormalW                        =   cross(vout.NormalW,TangentW) * vin.TangentL.w;
     vout.PosW                               =   mul(unity_ObjectToWorld, vin.PosL);
     vout.uv                                 =   vin.texcoord0;
+    vout.uv_Bump                            =   vin.uv_Bump;
+
+
+    vout.TW1                                = float4(TangentW.x, BinormalW.x, vout.NormalW.x, vout.PosW.x);
+    vout.TW2                                = float4(TangentW.y, BinormalW.y, vout.NormalW.y, vout.PosW.y);
+    vout.TW3                                = float4(TangentW.z, BinormalW.z, vout.NormalW.z, vout.PosW.z);
     return vout;
 }
 
@@ -106,6 +131,8 @@ float4 PS_HAIR(VertexOut_Shade pin) : SV_Target
 //-------------  SET DIRECTION  ---------------
     GET_DIRECTION_PARAMES(pin.NormalW, pin.PosW, N, L, V);
 
+//-------------  GET NORMAL TEXTURE  ----------
+    SET_NORMAL_TEXTURE(pin.TW1, pin.TW2, pin.TW3, pin.uv_Bump, N);
 //-------------  SET MAIN COLOR  --------------
     GET_HAIR_COLOR(mainColor, ilmColor, pin.uv, outColor);
 

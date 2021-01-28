@@ -65,11 +65,15 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTexture:
-        m_Texture: {fileID: 2800000, guid: 816a72e98ecaf7444a2f3485e6744983, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalTexture:
+        m_Texture: {fileID: 2800000, guid: a318c955f86002b47a4af2e514261e11, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -109,11 +113,11 @@ Material:
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _EdgeFeather: 0.403
-    - _EdgeStep: 0.517
+    - _EdgeFeather: 0.773
+    - _EdgeStep: 0.602
     - _EnvironmentReflections: 1
     - _FirstFeather: 0.16
-    - _FirstStep: 0.565
+    - _FirstStep: 0.642
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
@@ -121,15 +125,15 @@ Material:
     - _LightWidth: 0.9
     - _Metallic: 0
     - _OcclusionStrength: 1
-    - _OutlineWidth: 0.4
+    - _OutlineWidth: 0
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _RimFeather: 0.595
-    - _RimRangeStep: 0.845
+    - _RimFeather: 0.553
+    - _RimRangeStep: 0.791
     - _SPEC_Strength: 0.5
     - _SampleGI: 0
-    - _SecondFeather: 0.058
+    - _SecondFeather: 0.091
     - _SecondStep: 0.03
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
@@ -151,11 +155,11 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FirstShadowColor: {r: 0.609055, g: 0.6527256, b: 0.8018867, a: 1}
     - _FixShadowColor: {r: 0.990566, g: 0.990566, b: 0.990566, a: 1}
-    - _MainColor: {r: 1.216786, g: 1.216786, b: 1.216786, a: 1}
+    - _MainColor: {r: 0.8191527, g: 0.87549335, b: 0.9811321, a: 1}
     - _OutlineColor: {r: 0.39607844, g: 0.45490196, b: 0.7882353, a: 1}
-    - _RimLightColor: {r: 0.18115878, g: 0.60586303, b: 0.6509434, a: 1}
+    - _RimLightColor: {r: 0.4669811, g: 0.72782016, b: 1, a: 1}
     - _SPEC_COLOR: {r: 1, g: 1, b: 1, a: 1}
-    - _SecondShadowColor: {r: 0.70598966, g: 0.73493874, b: 0.8962264, a: 1}
-    - _ShadowEdgeColor: {r: 4.3707967, g: 5.205402, b: 6.218851, a: 1}
+    - _SecondShadowColor: {r: 0.7411765, g: 0.88492316, b: 0.8862745, a: 1}
+    - _ShadowEdgeColor: {r: 1.939642, g: 3.4664733, b: 5.3403134, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []

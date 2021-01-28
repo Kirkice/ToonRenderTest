@@ -87,7 +87,7 @@
 void SET_FACE_COLOR(inout float4 mainColor, inout float4 outColor, float2 uv)
 {
         mainColor                                       =  tex2D(_MainTexture, TRANSFORM_TEX(uv, _MainTexture)) * _MainColor;
-        outColor                                        =  mainColor;
+        outColor                                        =  float4(mainColor.rgb,1);
 }
 
 // //-------------  设置头发高光  --------------    
@@ -112,7 +112,61 @@ void SET_FACE_COLOR(inout float4 mainColor, inout float4 outColor, float2 uv)
 
 //                     outColor.rgb                        =   outColor.rgb * (1 - ilmColor.r) + HighLightMapRGB;
 //     }
-    
+
+//-------------  设置法线贴图  -------------- 
+void SET_NORMAL_TEXTURE(float4 TW1, float4 TW2, float4 TW3, float2 uv_Bump, inout float3 N)
+{
+    float3x3 TW                                             =   float3x3(TW1.xyz,TW2.xyz,TW3.xyz);
+    float4 normal                                           =   SAMPLE_TEXTURE2D(_NormalTexture, sampler_NormalTexture, uv_Bump);        //对法线纹理采样
+    float3 bump                                             =   UnpackNormal(normal); 
+    bump.xy                                                *=   1.5;
+    bump.z                                                  =   sqrt(1.0 - saturate(dot(bump.xy,bump.xy)));
+    bump                                                    =   mul(TW, bump);
+    N                                                       =   bump;
+}
+
+//-------------  COLORFUL  -------------- 
+half3 HSVtoRGB(half3 c)
+{
+	half4 K                                                 =   half4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+	half3 p                                                 =   abs(frac(c.xxx + K.xyz) * 6.0 - K.www);
+	return                                                  c.z * lerp(K.xxx, saturate(p - K.xxx), c.y);
+}
+
+half3 RGBtoHSV(half3 c)
+{
+	half4 K                                                 =   half4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+	half4 p                                                 =   lerp(half4(c.bg, K.wz), half4(c.gb, K.xy), step(c.b, c.g));
+	half4 q                                                 =   lerp(half4(p.xyw, c.r), half4(c.r, p.yzx), step(p.x, c.r));
+
+	half d                                                  =   q.x - min(q.w, q.y);
+	half e                                                  =   1.0e-10;
+
+	return                                                  half3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+}
+
+//-------------  HSV调节  -------------- 
+void SET_EYE_HSV(float4 mainColor, inout float4 outColor)
+{
+    float EYE_MASK                                          =   (1 - saturate(step(mainColor.a, 0.2))) * saturate(step(mainColor.a, 0.5));
+    float4 OTHER_PART                                       =   outColor * (1 - EYE_MASK);
+    float4 EYE_PART                                         =   outColor * EYE_MASK;
+
+    float3 HSV                                              =   RGBtoHSV(EYE_PART.rgb);
+    HSV.r                                                  +=   _HueOffset;
+    HSV.g                                                  +=   _SaturationOffset;
+    HSV.b                                                  +=   _ValueOffset;
+    EYE_PART.rgb                                            =   HSVtoRGB(HSV.rgb);
+
+    outColor                                                =   OTHER_PART + EYE_PART;
+}
+
+void SET_EYE_REFLECTION(float3 V, float3 N, inout float4 outColor)
+{
+    float3 reflectVector                                    = reflect(-V, N);
+    float3 reflection                                       = texCUBE(_Env,reflectVector);
+    // outColor.rgb                                            = reflection;
+}
 #endif
 
 

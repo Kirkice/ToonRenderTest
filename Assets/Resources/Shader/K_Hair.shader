@@ -19,9 +19,9 @@ Shader "K-Toon/Hair"
     Properties
     {
         [Main(g1,_,2)]  _group1                     ("基础设置",             float)          = 1 
-        [Sub(g1)][HDR]  _MainColor                  ("Main Color",          Color)          = (1,1,1,1)
+        [Sub(g1)]       _MainColor                  ("Main Color",          Color)          = (1,1,1,1)
         [Sub(g1)]       _MainTexture                ("Main Texture",        2D)             = "white"{}
-        // [Sub(g1)]       _ILMTexture                 ("ILM Texture",         2D)             = "white"{}
+        [Sub(g1)]       _NormalTexture              ("NORMAL Texture",      2D)             = "white"{}
 
         [Main(g2,_,2)]  _group2                     ("外勾边设置",           float)          = 1
         [Sub(g2)]       _OutlineWidth               ("Outline Width",       Range(0,1))     = 0.1
@@ -66,15 +66,15 @@ Shader "K-Toon/Hair"
         #include "Pass/ShaderPass.hlsl"
         ENDHLSL
 
-        Pass
-        {
-            Cull Front
-            Name "OutLine"
-            HLSLPROGRAM
-            #pragma vertex VS
-            #pragma fragment PS
-            ENDHLSL
-        }
+        // Pass
+        // {
+        //     Cull Front
+        //     Name "OutLine"
+        //     HLSLPROGRAM
+        //     #pragma vertex VS
+        //     #pragma fragment PS
+        //     ENDHLSL
+        // }
 
         Pass
         {

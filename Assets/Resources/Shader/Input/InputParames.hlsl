@@ -24,7 +24,6 @@
 //-------------  Textures  --------------
 uniform         sampler2D   _MainTexture;
 uniform         sampler2D   _ILMTexture;
-uniform         sampler2D   _NormalTexture;
 
 CBUFFER_START(UnityPerMaterial)
 
@@ -40,7 +39,7 @@ CBUFFER_START(UnityPerMaterial)
     uniform     float4      _ILMTexture_ST;
 
 //-------------  NORAMLTEX  -------------
-    uniform     float4      _NormalTexture_ST;
+TEXTURE2D(_NormalTexture);   SAMPLER(sampler_NormalTexture);
 
 //-------------  SHADOW  ---------------
     uniform     float4      _FirstShadowColor;
@@ -74,6 +73,13 @@ CBUFFER_START(UnityPerMaterial)
     uniform     float3      _HairFirstLightDirection;
     uniform     float3      _HairSecondLightDirection;
 
+//--------------  RGB HSV  --------------------
+    uniform     float       _HueOffset;
+    uniform     float       _SaturationOffset;
+    uniform     float       _ValueOffset;
+
+//--------------  CUBE MAP  --------------------
+    uniform     samplerCUBE _Env;
 CBUFFER_END
 
 #endif
