@@ -1,5 +1,24 @@
-//------------- Function --------------
-//-------------  Kirk  --------------
+/***********************************************************************************************
+ ***                                T O O N ---  S H A D E R                                 ***
+ ***********************************************************************************************
+ *                                                                                             *
+ *                                    Doc: ShaderUtil.hlsl                                     *
+ *                                                                                             *
+ *                                    Programmer : Kirk                                        *
+ *                                                                                             *
+ *                                      Date : 2021/1/20                                       *
+ *                                                                                             *
+ *---------------------------------------------------------------------------------------------*
+ * Functions List:                                                                             *
+ *   1.0 Get_HNoL                                                                              *
+ *   2.0 Get_H                                                                                 *
+ *   3.0 GET_DIRECTION_PARAMES                                                                 *
+ *   4.0 GET_HAIR_COLOR                                                                        *
+ *   5.0 SET_HAIR_SHADOW                                                                       *
+ *   6.0 SET_HAIR_RIMLIGHT                                                        			   *
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+
 #ifndef Include_ShaderUtil
 #define Include_ShaderUtil
 
@@ -63,6 +82,14 @@
         _RimLightColor                                  = lerp(_RimLightColor, _RimLightColor * 0.375, Set_ShadowMask_1st);
         outColor                                       += lerp(_RimLightColor, float4(0,0,0,0), Set_RimLightMask);
     }
+
+//------------------  设置面部固有色  ---------------------
+void SET_FACE_COLOR(inout float4 mainColor, inout float4 outColor, float2 uv)
+{
+        mainColor                                       =  tex2D(_MainTexture, TRANSFORM_TEX(uv, _MainTexture)) * _MainColor;
+        outColor                                        =  mainColor;
+}
+
 // //-------------  设置头发高光  --------------    
 //     void SET_HAIR_HIGHLIGHT(float4 ilmColor, float3 N, float3 H, inout float4 outColor)
 //     {
